@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bodo 90s Melodies</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --vintage-gold: #d4a373;
+            --dokhona-yellow: #ffb703;
+            --paper: #fefae0;
+            --glass: rgba(0, 0, 0, 0.5); /* Player background dark for contrast */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="5" fill="%23d4a373"/></svg>'), auto;
+        }
+
+        body {
+            background-color: #1a0f00;
+            color: var(--paper);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)),
+                url('bodo-bg.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2;
+        }
+
+        .vintage-filter {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(139, 69, 19, 0.1);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Resolution_White_Noise_Video_Frame.png');
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            color: var(--dokhona-yellow);
+            text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+            margin-bottom: 5px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            margin-bottom: 30px;
+        }
+
+        .visual-center {
+            position: relative;
+            width: 280px;
+            height: 180px;
+            background: #1a1a1a;
+            margin: 0 auto;
+            border-radius: 12px;
+            border: 6px solid #333;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .cassette-label {
+            width: 85%; height: 70%;
+            background: var(--vintage-gold);
+            border-radius: 4px;
+            padding: 10px;
+            color: #222;
+            font-weight: bold;
+            font-size: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .spool {
+            width: 35px; height: 35px;
+            background: #111; border-radius: 50%;
+            border: 4px dashed #666;
+            animation: rotate 4s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .playing .spool { animation-play-state: running; }
+
+        #quote-box {
+            height: 50px;
+            margin-top: 30px;
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,1);
+        }
+
+        .player-bar {
+            position: fixed;
+            bottom: 30px;
+            width: 90%;
+            max-width: 600px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+        .btn:hover { color: var(--dokhona-yellow); }
+
+        .progress-container {
+            width: 100%; height: 5px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px; margin-top: 8px; cursor: pointer;
+        }
+
+        .progress-bar {
+            width: 0%; height: 100%;
+            background: var(--dokhona-yellow);
+            border-radius: 5px;
+        }
+
+        #youtube-player { position: absolute; top: -500px; }
+
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="aronai-border"></div>
+    <div class="bg-overlay"></div>
+    <div class="vintage-filter"></div>
+    <div class="grain"></div>
+
+    <div class="container">
+        <h1>BODO 90's</h1>
+        <p class="subtitle">"TULUNGA BRAHMA"</p>
+
+        <div class="visual-center" id="cassette" onclick="togglePlay()">
+            <div class="cassette-label">
+                <div>90's GOLD HITS</div>
+                <div style="display: flex; justify-content: space-around;">
+                    <div class="spool"></div>
+                    <div class="spool"></div>
+                </div>
+                <div style="text-align: right;">BODO PRIDE</div>
+            </div>
+        </div>
+
+        <div id="quote-box">Loading Bodo memories...</div>
+    </div>
+
+    <div id="youtube-player">
+        <div id="player"></div>
+    </div>
+
+    <div class="player-bar">
+        <div style="display: flex; gap: 15px;">
+            <button class="btn" onclick="prevVideo()">⏮</button>
+            <button class="btn" id="play-trigger" onclick="togglePlay()">▶</button>
+            <button class="btn" onclick="nextVideo()">⏭</button>
+        </div>
+        <div style="flex-grow: 1; overflow: hidden;">
+            <div id="now-playing" style="font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Click play to start...</div>
+            <div class="progress-container" onclick="seek(event)">
+                <div class="progress-bar" id="progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        const quotes = [
+    "Remembering the rainy days in the village...",
+    "Listening to Sulekha Basumatary on a battery radio.",
+    "The smell of fresh Goy-Pathwi and the sound of Bwisagu.",
+    "Angni khontai... angni methai...",
+    "Aronai gwnang methai...",
+    "Those evenings when the whole village gathered under one roof.",
+    "A battery radio, a cup of tea, and songs from another time.",
+    "Remembering the days when every song had a story.",
+    "The sound of music drifting through the quiet village nights.",
+    "Old melodies, old memories, forever close to the heart.",
+    "When Bodo songs played softly in the evening air.",
+    "Those simple days... when happiness needed very little.",
+    "A cassette turning slowly, carrying memories from the 90s.",
+    "Before smartphones, we waited for our favourite songs on the radio.",
+    "Rain outside, music inside, and the whole evening ahead.",
+    "The golden days of Bodo music still echo in our hearts.",
+    "From village courtyards to old cassette players...",
+    "Some melodies never grow old.",
+    "Those Bwisagu nights still feel like yesterday.",
+    "The songs changed, but the memories stayed.",
+    "Remembering the voices that filled our childhood homes.",
+    "A little Aronai, a little music, and a lot of memories.",
+    "90s Bodo music... where every melody felt like home.",
+    "When the village was quiet, the cassette player spoke.",
+    "Old songs. Old voices. Timeless memories.",
+    "The rhythm of the drum, the warmth of the village, the soul of Bodo music.",
+    "Back to the days when music was shared, not streamed.",
+    "Somewhere between an old cassette and a rainy evening...",
+    "Our childhood had a soundtrack — Bodo music.",
+    "For those who grew up with these melodies, the memories never fade."
+];
+
+        let qIdx = 0;
+        setInterval(() => {
+            qIdx = (qIdx + 1) % quotes.length;
+            document.getElementById('quote-box').innerText = `"${quotes[qIdx]}"`;
+        }, 5000);
+
+        let player;
+        let isPlaying = false;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0', width: '0',
+                playerVars: {
+                    'listType': 'playlist',
+                    'list': 'PLOuOIN064MPSLem7PyXQY08nur_IOqmSa'
+                },
+                events: { 'onStateChange': onPlayerStateChange }
+            });
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                document.getElementById('cassette').classList.add('playing');
+                document.getElementById('play-trigger').innerText = '⏸';
+                isPlaying = true;
+                const data = player.getVideoData();
+                document.getElementById('now-playing').innerText = data.title;
+            } else {
+                document.getElementById('cassette').classList.remove('playing');
+                document.getElementById('play-trigger').innerText = '▶';
+                isPlaying = false;
+            }
+        }
+
+        function togglePlay() {
+            if (isPlaying) player.pauseVideo();
+            else player.playVideo();
+        }
+
+        function nextVideo() { player.nextVideo(); }
+        function prevVideo() { player.previousVideo(); }
+
+        setInterval(() => {
+            if (player && isPlaying) {
+                let perc = (player.getCurrentTime() / player.getDuration()) * 100;
+                document.getElementById('progress').style.width = perc + '%';
+            }
+        }, 1000);
+
+        function seek(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const perc = (event.clientX - rect.left) / rect.width;
+            player.seekTo(player.getDuration() * perc);
+        }
+    </script>
+</body>
+</html>
